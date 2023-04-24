@@ -1,4 +1,4 @@
-package mc1_proyecto_2023;
+package app;
 
 public class MC1_Proyecto_2023 {
 
