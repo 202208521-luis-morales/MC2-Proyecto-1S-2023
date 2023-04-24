@@ -1,11 +1,12 @@
 package app;
 
 import java.util.ArrayList;
+import modelos.Arista;
 import modelos.Vertice;
 
 public class Db {
     public ArrayList<Vertice> dbVerticesTabla = new ArrayList<>();
-    public ArrayList<Vertice> dbAristasTabla = new ArrayList<>();
+    public ArrayList<Arista> dbAristasTabla = new ArrayList<>();
     private static Db db;
     
     private Db() {}

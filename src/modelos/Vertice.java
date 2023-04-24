@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class Vertice {
     private String id;
-    private String nombre;
+    private String nombre; // El nombre será único
     private boolean esValido;
 
     public Vertice(String nombre, boolean esValido) {
