@@ -52,6 +52,4 @@ public class Arista {
     public void setEsValido(boolean esValido) {
         this.esValido = esValido;
     }
-    
-    
 }
