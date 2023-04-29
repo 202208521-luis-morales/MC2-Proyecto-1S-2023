@@ -115,11 +115,11 @@ private Db db;
         GrafoPanel.setLayout(GrafoPanelLayout);
         GrafoPanelLayout.setHorizontalGroup(
             GrafoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 338, Short.MAX_VALUE)
+            .addGap(0, 320, Short.MAX_VALUE)
         );
         GrafoPanelLayout.setVerticalGroup(
             GrafoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 320, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout PrimPanelLayout = new javax.swing.GroupLayout(PrimPanel);
@@ -130,7 +130,7 @@ private Db db;
         );
         PrimPanelLayout.setVerticalGroup(
             PrimPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 320, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -184,13 +184,14 @@ private Db db;
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(GrafoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(PrimPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(PrimPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(GrafoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel6)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -237,14 +238,14 @@ private Db db;
         actualizarVertices();
         txtVertice.setText("");
     }
-    }else{        JOptionPane.showMessageDialog(this, "Por favor llene todos los espacios.", "Error", JOptionPane.ERROR_MESSAGE);
-                     txtVertice.setText("");
+    }else{JOptionPane.showMessageDialog(this, "Por favor llene todos los espacios.", "Error", JOptionPane.ERROR_MESSAGE);      
        }
     }//GEN-LAST:event_btnCargarActionPerformed
 
     private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
-      Graphics g = GrafoPanel.getGraphics();
+        Graphics g = GrafoPanel.getGraphics();
     dibujarVerticeYArista(g);
+        
     }//GEN-LAST:event_btnGenerarActionPerformed
 
 
@@ -281,30 +282,35 @@ private Db db;
 
     
     private void dibujarVerticeYArista(Graphics g) {
-    // Dibujar los vértices
+   int panelWidth = getWidth();
+    int panelHeight = getHeight();
+
     for (Vertice vertice : db.dbVerticesTabla) {
-        int x = (int) (Math.random() * (getWidth() - 20));
-        int y = (int) (Math.random() * (getHeight() - 20));
+        int x = (int) (Math.random() * (panelWidth - 20));
+        int y = (int) (Math.random() * (panelHeight - 20));
+        x = Math.max(x, 10);  // Evitar que la coordenada x sea menor que 10
+        y = Math.max(y, 10);  // Evitar que la coordenada y sea menor que 10
+        x = Math.min(x, panelWidth - 30);  // Evitar que la coordenada x sea mayor que el ancho del panel menos 30
+        y = Math.min(y, panelHeight - 30); // Evitar que la coordenada y sea mayor que la altura del panel menos 30
+
         g.setColor(Color.RED);
         g.fillOval(x, y, 20, 20);
         g.setColor(Color.BLACK);
         g.drawString(vertice.getNombre(), x + 25, y + 15);
 
-        
-       ArrayList<Arista> aristasDelVertice = obtenerAristasDelVertice(vertice);
+        ArrayList<Arista> aristasDelVertice = obtenerAristasDelVertice(vertice);
         for (Arista arista : aristasDelVertice) {
             Vertice vertice1 = arista.getVertice1();
             Vertice vertice2 = arista.getVertice2();
-       int x1 = vertice1.getX(); 
-        int y1 = vertice1.getY(); 
-        int x2 = vertice2.getX(); 
-        int y2 = vertice2.getY(); 
+            int x1 = vertice1.getX();
+            int y1 = vertice1.getY();
+            int x2 = vertice2.getX();
+            int y2 = vertice2.getY();
 
-
-            g.setColor(Color.BLUE); // Establecer el color de la arista
-            g.drawLine(x1 + 10, y1 + 10, x2 + 10, y2 + 10); // Dibujar una línea que conecta los dos vértices
-            g.setColor(Color.BLACK); // Establecer el color del peso de la arista
-            g.drawString(Integer.toString(arista.getPeso()), (x1 + x2) / 2, (y1 + y2) / 2); // Dibujar el peso de la arista en el centro de la línea
+            g.setColor(Color.BLUE);
+            g.drawLine(x1 + 10, y1 + 10, x2 + 10, y2 + 10);
+            g.setColor(Color.BLACK);
+            g.drawString(Integer.toString(arista.getPeso()), (x1 + x2) / 2, (y1 + y2) / 2);
         }
     }
     }//GEN-LAST:event_btnAgregarActionPerformed
@@ -330,7 +336,7 @@ private Db db;
     return null; 
 }
     
-    
+
     private void txtVerticeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtVerticeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtVerticeActionPerformed
@@ -364,6 +370,7 @@ private void actualizarAristas() {
 
     
     
+  
     
     /**
      * @param args the command line arguments

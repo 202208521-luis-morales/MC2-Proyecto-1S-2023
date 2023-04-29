@@ -12,7 +12,7 @@ public class locacion {
         private int x;
     private int y;
 
-    // Resto del código de la clase Vertice
+    
 
     public int getX() {
         return x;
