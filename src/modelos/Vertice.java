@@ -3,6 +3,8 @@ package modelos;
 import java.util.UUID;
 
 public class Vertice {
+     private int x;
+    private int y;
     private String id;
     private String nombre; // El nombre será único
     private boolean esValido;
@@ -31,5 +33,12 @@ public class Vertice {
 
     public void setEsValido(boolean esValido) {
         this.esValido = esValido;
+    }
+     public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }

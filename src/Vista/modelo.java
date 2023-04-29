@@ -3,10 +3,12 @@ import app.Db;
 import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.Canvas;
+import java.awt.Color;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import modelos.Arista;
 import modelos.Vertice;
-import modelos.GrafoCanvas;
+
 
 public class modelo extends javax.swing.JFrame {
 private Db db;
@@ -117,7 +119,7 @@ private Db db;
         );
         GrafoPanelLayout.setVerticalGroup(
             GrafoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 224, Short.MAX_VALUE)
+            .addGap(0, 320, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout PrimPanelLayout = new javax.swing.GroupLayout(PrimPanel);
@@ -128,7 +130,7 @@ private Db db;
         );
         PrimPanelLayout.setVerticalGroup(
             PrimPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 221, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -180,11 +182,11 @@ private Db db;
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(GrafoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(PrimPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(GrafoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(PrimPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel5)
@@ -241,7 +243,8 @@ private Db db;
     }//GEN-LAST:event_btnCargarActionPerformed
 
     private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
-      
+      Graphics g = GrafoPanel.getGraphics();
+    dibujarVerticeYArista(g);
     }//GEN-LAST:event_btnGenerarActionPerformed
 
 
@@ -276,15 +279,58 @@ private Db db;
     txtPeso.setText("");
 }
 
-private Vertice buscarVerticePorNombre(String nombre) {
+    
+    private void dibujarVerticeYArista(Graphics g) {
+    // Dibujar los vértices
+    for (Vertice vertice : db.dbVerticesTabla) {
+        int x = (int) (Math.random() * (getWidth() - 20));
+        int y = (int) (Math.random() * (getHeight() - 20));
+        g.setColor(Color.RED);
+        g.fillOval(x, y, 20, 20);
+        g.setColor(Color.BLACK);
+        g.drawString(vertice.getNombre(), x + 25, y + 15);
+
+        
+       ArrayList<Arista> aristasDelVertice = obtenerAristasDelVertice(vertice);
+        for (Arista arista : aristasDelVertice) {
+            Vertice vertice1 = arista.getVertice1();
+            Vertice vertice2 = arista.getVertice2();
+       int x1 = vertice1.getX(); 
+        int y1 = vertice1.getY(); 
+        int x2 = vertice2.getX(); 
+        int y2 = vertice2.getY(); 
+
+
+            g.setColor(Color.BLUE); // Establecer el color de la arista
+            g.drawLine(x1 + 10, y1 + 10, x2 + 10, y2 + 10); // Dibujar una línea que conecta los dos vértices
+            g.setColor(Color.BLACK); // Establecer el color del peso de la arista
+            g.drawString(Integer.toString(arista.getPeso()), (x1 + x2) / 2, (y1 + y2) / 2); // Dibujar el peso de la arista en el centro de la línea
+        }
+    }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    
+    
+    public ArrayList<Arista> obtenerAristasDelVertice(Vertice vertice) {
+    ArrayList<Arista> aristasDelVertice = new ArrayList<>();
+    for (Arista arista : db.dbAristasTabla) {
+        if (arista.getVertice1().equals(vertice) || arista.getVertice2().equals(vertice)) {
+            aristasDelVertice.add(arista);
+        }
+    }
+    return aristasDelVertice;
+}
+    
+    private Vertice buscarVerticePorNombre(String nombre) {
     for (Vertice vertice : db.dbVerticesTabla) {
         if (vertice.getNombre().equals(nombre)) {
             return vertice;
         }
     }
     return null; 
-    }//GEN-LAST:event_btnAgregarActionPerformed
-
+}
+    
+    
     private void txtVerticeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtVerticeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtVerticeActionPerformed
@@ -302,17 +348,19 @@ private Vertice buscarVerticePorNombre(String nombre) {
 }
 
 private void actualizarAristas() {
-    StringBuilder sb = new StringBuilder();
-    /*for (Arista arista : db.dbAristasTabla) {
-        sb.append(arista.getVertice1()).append("-").append(arista.getVertice2()).append(" (").append(arista.getPeso()).append(")\n");
-    }*/
-    jTextArea2.setText(sb.toString());
-     if (!db.dbAristasTabla.isEmpty()) {
-        Arista últimaArista = db.dbAristasTabla.get(db.dbAristasTabla.size() - 1);
-        jTextArea2.append("Arista: " + últimaArista.getVertice1().getNombre() + " - " +
-                últimaArista.getVertice2().getNombre() + ", Peso: " + últimaArista.getPeso() + "\n");
+    
+      StringBuilder sb = new StringBuilder();
+    for (Arista arista : db.dbAristasTabla) {
+        sb.append("Arista: ")
+            .append(arista.getVertice1().getNombre())
+            .append(" - ")
+            .append(arista.getVertice2().getNombre())
+            .append("     Peso:(")
+            .append(arista.getPeso())
+            .append(")\n");
     }
-}
+    jTextArea2.setText(sb.toString());
+    }
 
     
     
